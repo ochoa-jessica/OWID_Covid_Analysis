@@ -148,3 +148,33 @@ WHERE dea.continent IS NOT NULL
 
 SELECT *
 FROM PercentPopulationVaccinated
+
+-- Queries to conduct EDA in Tableau
+SELECT SUM(new_cases) AS total_cases, 
+SUM(cast(new_deaths AS int)) AS total_deaths,
+SUM(cast(new_deaths AS int))/SUM(New_Cases)*100 AS DeathPercentage
+FROM CovidDeaths
+WHERE continent IS NOT NULL
+ORDER BY 1,2
+
+SELECT location, SUM(cast(new_deaths AS int)) AS TotalDeathCount
+FROM CovidDeaths
+WHERE continent IS NULL
+AND location NOT IN ('World', 'European Union', 'International')
+GROUP BY location
+ORDER BY TotalDeathCount DESC
+
+SELECT Location, Population, 
+MAX(total_cases) AS HighestInfectionCount,  
+Max((total_cases/population))*100 AS PercentPopulationInfected
+FROM CovidDeaths
+GROUP BY Location, Population
+ORDER BY PercentPopulationInfected DESC
+
+SELECT Location, Population, date, 
+MAX(total_cases) AS HighestInfectionCount,  
+Max((total_cases/population))*100 AS PercentPopulationInfected
+FROM CovidDeaths
+GROUP BY Location, Population, date
+ORDER BY PercentPopulationInfected DESC
+
